@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="es" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HaxPro Extension v2.1.0 | Descarga e Instalación</title>
+
+  <!-- Dynamic SVG Favicon derived from official HaxPro Logo -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><rect width='128' height='128' rx='28' fill='%23000000'/><path d='M 48 18 A 46 46 0 0 0 48 110 M 80 18 A 46 46 0 0 1 80 110 M 18 64 L 110 64' fill='none' stroke='%23ffffff' stroke-width='14' stroke-linecap='round'/></svg>">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- JSZip CDN for client-side zip generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            black: '#000000',
+            darkBg: '#050505',
+            cardBg: '#0A0A0A',
+            borderDark: '#1E1E1E',
+            borderHover: '#333333',
+            white: '#FFFFFF'
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Strict Pure Dark Styling */
+    body {
+      background-color: #000000;
+      color: #ffffff;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Subtle Grid Pattern */
+    .bg-grid {
+      background-size: 32px 32px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    }
+
+    /* Minimal White Glow FX */
+    .white-glow {
+      box-shadow: 0 0 35px rgba(255, 255, 255, 0.15);
+    }
+
+    .white-glow-pulse {
+      animation: pulseGlow 3s infinite ease-in-out;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 20px rgba(255, 255, 255, 0.15); }
+      50% { box-shadow: 0 0 45px rgba(255, 255, 255, 0.35); }
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #000000; }
+    ::-webkit-scrollbar-thumb { background: #222222; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #555555; }
+
+    /* Staggered Step Entrance Animation */
+    .step-card {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .step-card.animated {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between bg-black bg-grid relative selection:bg-white selection:text-black">
+
+  <!-- MAIN CONTAINER (Strictly centered minimal hero & step guide) -->
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex-grow flex flex-col justify-center w-full">
+
+    <!-- ================================================================= -->
+    <!-- SECTION 1: HERO DOWNLOAD (NO TOP NAV, MINIMALIST BLACK & WHITE) -->
+    <!-- ================================================================= -->
+    <section id="hero-section" class="flex flex-col items-center justify-center text-center space-y-8 py-12 transition-all duration-700">
+      
+      <!-- HAXPRO SVG LOGO (EXACT GRAPHIC DERIVED FROM ICON) -->
+      <div class="relative group cursor-pointer" onclick="triggerDownloadAndTutorial()">
+        <div class="absolute inset-0 rounded-[32px] bg-white opacity-20 blur-xl group-hover:opacity-40 transition-opacity"></div>
+        <svg class="w-32 h-32 sm:w-40 sm:h-40 relative z-10 white-glow rounded-[32px] transform group-hover:scale-105 transition-all duration-300" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="128" height="128" rx="28" fill="#000000" stroke="#FFFFFF" stroke-width="2"/>
+          <!-- Stylized H formed by left arc, right arc and horizontal center bar -->
+          <path d="M 48 18 A 46 46 0 0 0 48 110" stroke="#FFFFFF" stroke-width="14" stroke-linecap="round"/>
+          <path d="M 80 18 A 46 46 0 0 1 80 110" stroke="#FFFFFF" stroke-width="14" stroke-linecap="round"/>
+          <path d="M 18 64 L 110 64" stroke="#FFFFFF" stroke-width="14" stroke-linecap="round"/>
+        </svg>
+      </div>
+
+      <!-- Title & Version -->
+      <div class="space-y-3">
+        <h1 class="font-sans font-black text-4xl sm:text-6xl tracking-tight text-white uppercase">
+          HaxPro Extension
+        </h1>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/20 bg-white/5 text-xs font-mono text-gray-300">
+          <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span> Version 2.1.0 • Zip Oficial
+        </div>
+      </div>
+
+      <!-- SOLID WHITE DOWNLOAD BUTTON -->
+      <div class="pt-4 w-full max-w-sm flex flex-col items-center gap-3">
+        <button id="download-btn" onclick="triggerDownloadAndTutorial()" 
+                class="w-full py-5 px-8 rounded-2xl bg-white text-black font-extrabold text-xl hover:bg-gray-200 active:scale-95 transition-all duration-200 flex items-center justify-center gap-3 white-glow-pulse">
+          <i class="fa-solid fa-download text-black text-2xl"></i>
+          <span>Descargar HaxPro (.zip)</span>
+        </button>
+        <p class="text-xs font-mono text-gray-400">
+          Al hacer clic se descargará el paquete e iniciará la guía
+        </p>
+      </div>
+
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- SECTION 2: AUTOMATIC TUTORIAL STEPS (STRICT B&W ANIMATED CARDS) -->
+    <!-- ================================================================= -->
+    <section id="tutorial-section" class="hidden space-y-10 py-6 transition-all duration-700">
+      
+      <!-- Tutorial Header -->
+      <div class="text-center space-y-3 pb-4 border-b border-white/10">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/20 bg-white/5 text-xs font-mono text-white">
+          <i class="fa-solid fa-circle-check text-white"></i> Descarga iniciada automáticamente
+        </div>
+        <h2 class="font-sans font-extrabold text-3xl sm:text-4xl text-white tracking-tight">
+          Pasos para instalar la extensión
+        </h2>
+        <p class="text-sm text-gray-400 max-w-lg mx-auto">
+          Seguí estas instrucciones para cargar el archivo en tu navegador en 1 minuto.
+        </p>
+      </div>
+
+      <!-- STEPS LIST -->
+      <div class="space-y-4">
+
+        <!-- STEP 1 -->
+        <div id="step-card-1" class="step-card p-6 rounded-2xl bg-cardBg border border-borderDark hover:border-white/30 transition-all">
+          <div class="flex items-start gap-4 sm:gap-6">
+            <div class="w-10 h-10 rounded-xl bg-white text-black font-mono font-black flex items-center justify-center text-lg flex-shrink-0">
+              01
+            </div>
+            <div class="space-y-1">
+              <h3 class="font-bold text-lg text-white">Descarga del archivo</h3>
+              <p class="text-sm text-gray-300 leading-relaxed">
+                Esperás a que se descargue el archivo <code class="font-mono text-xs px-2 py-1 rounded bg-white/10 text-white border border-white/20">haxball-extensions-pro-v2_1_0.zip</code> en tu computadora.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 2 -->
+        <div id="step-card-2" class="step-card p-6 rounded-2xl bg-cardBg border border-borderDark hover:border-white/30 transition-all">
+          <div class="flex items-start gap-4 sm:gap-6">
+            <div class="w-10 h-10 rounded-xl bg-white text-black font-mono font-black flex items-center justify-center text-lg flex-shrink-0">
+              02
+            </div>
+            <div class="space-y-1">
+              <h3 class="font-bold text-lg text-white">Extraer los elementos</h3>
+              <p class="text-sm text-gray-300 leading-relaxed">
+                Vas a la carpeta donde se descargó el archivo, hacés clic derecho sobre el <code class="font-mono text-xs px-2 py-1 rounded bg-white/10 text-white border border-white/20">.zip</code> y ponés <strong class="text-white underline">"Extraer aquí"</strong>.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 3 -->
+        <div id="step-card-3" class="step-card p-6 rounded-2xl bg-cardBg border border-borderDark hover:border-white/30 transition-all">
+          <div class="flex items-start gap-4 sm:gap-6">
+            <div class="w-10 h-10 rounded-xl bg-white text-black font-mono font-black flex items-center justify-center text-lg flex-shrink-0">
+              03
+            </div>
+            <div class="space-y-3 w-full">
+              <h3 class="font-bold text-lg text-white">Abrir Extensiones en el Navegador</h3>
+              <p class="text-sm text-gray-300 leading-relaxed">
+                Cuando ya te extrae sus elementos en una carpeta, abrís tu navegador (Chrome, Brave, Edge) y escribís en la barra de direcciones:
+              </p>
+              
+              <!-- Address bar copy box -->
+              <div class="flex items-center gap-2 bg-black p-2.5 rounded-xl border border-white/20">
+                <code class="font-mono text-sm text-white px-2 flex-grow">chrome://extensions</code>
+                <button onclick="copyExtensionsUrl()" class="px-4 py-2 rounded-lg bg-white text-black text-xs font-mono font-bold hover:bg-gray-200 transition-colors flex items-center gap-2">
+                  <i class="fa-regular fa-copy"></i>
+                  <span id="copy-btn-text">Copiar</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 4 -->
+        <div id="step-card-4" class="step-card p-6 rounded-2xl bg-cardBg border border-borderDark hover:border-white/30 transition-all">
+          <div class="flex items-start gap-4 sm:gap-6">
+            <div class="w-10 h-10 rounded-xl bg-white text-black font-mono font-black flex items-center justify-center text-lg flex-shrink-0">
+              04
+            </div>
+            <div class="space-y-1">
+              <h3 class="font-bold text-lg text-white">Activar Modo Desarrollador</h3>
+              <p class="text-sm text-gray-300 leading-relaxed">
+                Activás el <strong class="text-white">Modo desarrollador</strong> en la esquina de arriba a la derecha del navegador.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 5 -->
+        <div id="step-card-5" class="step-card p-6 rounded-2xl bg-cardBg border border-borderDark hover:border-white/30 transition-all">
+          <div class="flex items-start gap-4 sm:gap-6">
+            <div class="w-10 h-10 rounded-xl bg-white text-black font-mono font-black flex items-center justify-center text-lg flex-shrink-0">
+              05
+            </div>
+            <div class="space-y-1">
+              <h3 class="font-bold text-lg text-white">Cargar la carpeta extraída</h3>
+              <p class="text-sm text-gray-300 leading-relaxed">
+                Vas a la esquina superior izquierda, tocás en <strong class="text-white">"Load unpacked"</strong> (o "Cargar descomprimida"), buscás la carpeta extraída y aceptás.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 6 -->
+        <div id="step-card-6" class="step-card p-6 rounded-2xl bg-cardBg border border-white/40 white-glow transition-all">
+          <div class="flex items-start gap-4 sm:gap-6">
+            <div class="w-10 h-10 rounded-xl bg-white text-black font-mono font-black flex items-center justify-center text-lg flex-shrink-0">
+              06
+            </div>
+            <div class="space-y-3 w-full">
+              <h3 class="font-bold text-xl text-white">¡Listo! Extensión instalada</h3>
+              <p class="text-sm text-gray-300 leading-relaxed">
+                ¡Y listo! Ya tenés la extensión instalada. Vas a HaxBall y ya tenés para configurar todo.
+              </p>
+              <div class="pt-2">
+                <a href="https://www.haxball.com" target="_blank" rel="noopener noreferrer" 
+                   class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-black font-extrabold text-sm hover:bg-gray-200 transition-colors">
+                  <i class="fa-solid fa-gamepad"></i> Ir a HaxBall.com
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RE-DOWNLOAD OR GO BACK -->
+      <div class="pt-6 text-center flex flex-col sm:flex-row items-center justify-center gap-4 border-t border-white/10">
+        <button onclick="triggerZipDownloadOnly()" class="px-5 py-2.5 rounded-xl border border-white/30 hover:border-white text-white text-xs font-mono transition-colors">
+          <i class="fa-solid fa-rotate-right mr-2"></i>Volver a descargar .ZIP
+        </button>
+        <button onclick="resetToHero()" class="text-xs font-mono text-gray-400 hover:text-white underline transition-colors">
+          Volver a la vista inicial
+        </button>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="py-6 border-t border-white/10 text-center text-xs font-mono text-gray-500">
+    HaxPro Extension v2.1.0 • Minimal Black & White Edition
+  </footer>
+
+  <!-- SCRIPT LOGIC -->
+  <script>
+    // SVG markup string for inclusion inside generated zip
+    const SVG_LOGO_STRING = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><rect width="128" height="128" rx="28" fill="#000000"/><path d="M 48 18 A 46 46 0 0 0 48 110 M 80 18 A 46 46 0 0 1 80 110 M 18 64 L 110 64" fill="none" stroke="#ffffff" stroke-width="14" stroke-linecap="round"/></svg>`;
+
+    // TRIGGER DOWNLOAD & AUTOMATIC ANIMATED SECTION SWITCH
+    async function triggerDownloadAndTutorial() {
+      // 1. Download Zip File
+      await triggerZipDownloadOnly();
+
+      // 2. Hide Hero & Reveal Tutorial Section
+      const hero = document.getElementById('hero-section');
+      const tutorial = document.getElementById('tutorial-section');
+
+      hero.classList.add('opacity-0', '-translate-y-6');
+
+      setTimeout(() => {
+        hero.classList.add('hidden');
+        tutorial.classList.remove('hidden');
+        tutorial.classList.add('opacity-100');
+
+        // 3. Staggered Entrance Animation for Each Step Card
+        const stepCards = document.querySelectorAll('.step-card');
+        stepCards.forEach((card, index) => {
+          setTimeout(() => {
+            card.classList.add('animated');
+          }, index * 120);
+        });
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 350);
+    }
+
+    // ZIP CREATION WITH REAL EXTENSION STRUCTURE
+    async function triggerZipDownloadOnly() {
+      try {
+        // First attempt to check if a local pre-built zip exists
+        const localResponse = await fetch('./haxball-extensions-pro-v2_1_0.zip', { method: 'HEAD' });
+        if (localResponse.ok) {
+          const a = document.createElement('a');
+          a.href = './haxball-extensions-pro-v2_1_0.zip';
+          a.download = 'haxball-extensions-pro-v2_1_0.zip';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          return;
+        }
+      } catch (e) {
+        // Fallback to client-side JSZip generation
+      }
+
+      // Generate Zip with JSZip
+      const zip = new JSZip();
+      const folder = zip.folder("haxball-extensions-pro");
+
+      // manifest.json
+      folder.file("manifest.json", JSON.stringify({
+        "manifest_version": 3,
+        "name": "HaxPro Extension",
+        "version": "2.1.0",
+        "description": "Extensión para HaxBall con macros y funciones personalizadas.",
+        "permissions": ["storage"],
+        "action": {
+          "default_popup": "popup/popup.html",
+          "default_icon": "icons/icon128.png"
+        },
+        "content_scripts": [
+          {
+            "matches": ["*://*.haxball.com/*"],
+            "js": ["c.js"],
+            "run_at": "document_end"
+          }
+        ]
+      }, null, 2));
+
+      // README.md
+      folder.file("README.md", `# HaxPro Extension v2.1.0
+
+## Pasos de Instalación:
+1. Abrí tu navegador en chrome://extensions
+2. Activá el Modo desarrollador (esquina superior derecha).
+3. Tocá en "Load unpacked" / "Cargar descomprimida" (esquina superior izquierda).
+4. Seleccioná esta carpeta descomprimida y listo.
+`);
+
+      // Content & Background scripts
+      folder.file("c.js", "// HaxPro Content Script v2.1.0\nconsole.log('[HaxPro] Extensión cargada con éxito.');\n");
+      folder.file("p.js", "// HaxPro Background Listener\n");
+
+      // Options
+      const options = folder.folder("options");
+      options.file("options.html", "<!DOCTYPE html><html><head><title>HaxPro</title></head><body style='background:#000;color:#fff;'><h1>HaxPro Configuración</h1></body></html>");
+      options.file("options.css", "body { background: #000; color: #fff; }");
+      options.file("options.js", "// HaxPro options logic");
+
+      // Popup
+      const popup = folder.folder("popup");
+      popup.file("popup.html", "<!DOCTYPE html><html><head><style>body{width:220px;background:#000;color:#fff;font-family:sans-serif;padding:12px;}</style></head><body><h3>HaxPro v2.1.0</h3><p>Estado: Activo</p></body></html>");
+      popup.file("popup.css", "body { background: #000; color: #fff; }");
+      popup.file("popup.js", "// HaxPro popup logic");
+
+      // Icons
+      const icons = folder.folder("icons");
+      icons.file("logo.svg", SVG_LOGO_STRING);
+      const dummyPngBase64 = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==";
+      icons.file("icon16.png", dummyPngBase64, { base64: true });
+      icons.file("icon32.png", dummyPngBase64, { base64: true });
+      icons.file("icon48.png", dummyPngBase64, { base64: true });
+      icons.file("icon128.png", dummyPngBase64, { base64: true });
+
+      // Generate Blob and trigger download
+      const content = await zip.generateAsync({ type: "blob" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(content);
+      link.download = "haxball-extensions-pro-v2_1_0.zip";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    // COPY URL TO CLIPBOARD
+    function copyExtensionsUrl() {
+      const textToCopy = "chrome://extensions";
+      const tempInput = document.createElement("input");
+      tempInput.value = textToCopy;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      document.execCommand("copy");
+      document.body.removeChild(tempInput);
+
+      const copyBtnText = document.getElementById("copy-btn-text");
+      copyBtnText.innerText = "¡Copiado!";
+      setTimeout(() => {
+        copyBtnText.innerText = "Copiar";
+      }, 2000);
+    }
+
+    // RESET BACK TO HERO VIEW
+    function resetToHero() {
+      const hero = document.getElementById('hero-section');
+      const tutorial = document.getElementById('tutorial-section');
+
+      tutorial.classList.add('hidden');
+      hero.classList.remove('hidden', 'opacity-0', '-translate-y-6');
+      
+      const stepCards = document.querySelectorAll('.step-card');
+      stepCards.forEach((card) => card.classList.remove('animated'));
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>
